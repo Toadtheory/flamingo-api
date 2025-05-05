@@ -20,9 +20,9 @@ app.get('/generate-image', async (req, res) => {
     const imageUrl = response.data[0].url;
     res.json({ url: imageUrl });
   } catch (error) {
-    console.error("Image generation failed:", error);
-    res.status(500).json({ error: 'Image generation failed' });
-  }
+  console.error("Image generation failed:", error.response?.data || error.message || error);
+  res.status(500).json({ error: error.message || 'Image generation failed' });
+}
 });
 
 const PORT = process.env.PORT || 3000;
