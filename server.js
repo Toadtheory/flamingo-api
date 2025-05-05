@@ -1,28 +1,26 @@
 const express = require('express');
 const cors = require('cors');
-const { OpenAIApi, Configuration } = require('openai');
 require('dotenv').config();
+const { OpenAI } = require('openai');
 
 const app = express();
 app.use(cors());
 
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-);
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 app.get('/generate-image', async (req, res) => {
   try {
-    const response = await openai.createImage({
+    const response = await openai.images.generate({
       prompt: "flamingo in an elevator",
       n: 1,
       size: "512x512",
     });
-    const imageUrl = response.data.data[0].url;
+    const imageUrl = response.data[0].url;
     res.json({ url: imageUrl });
   } catch (error) {
-    console.error(error);
+    console.error("Image generation failed:", error);
     res.status(500).json({ error: 'Image generation failed' });
   }
 });
